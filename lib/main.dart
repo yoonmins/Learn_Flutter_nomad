@@ -14,43 +14,77 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int counter = 0;
+  bool showTitle = true;
 
-  void onClicked() {
-    setState((){
-    counter = counter + 1;
+  void toggleTitle() {
+    setState(() {
+      showTitle = !showTitle;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.red,
+          ),
+        ),
+      ),
       home: Scaffold(
         backgroundColor: const Color(0xFFF4EDDB),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Click Count',
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-              Text(
-                '$counter',
-                style: const TextStyle(
-                  fontSize: 30,
-                ),
-              ),
+              showTitle ? const MyLargeTitle() : const Text('nothing'),
               IconButton(
-                  iconSize: 40,
-                  onPressed: onClicked,
-                  icon: const Icon(Icons.add_box),
+                onPressed: toggleTitle,
+                icon: Icon(Icons.remove_red_eye),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MyLargeTitle extends StatefulWidget {
+  const MyLargeTitle({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MyLargeTitle> createState() => _MyLargeTitleState();
+}
+
+class _MyLargeTitleState extends State<MyLargeTitle> {
+  int count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print("hello");
+  }
+  // 변수 값을 초기화할때 사용되는 메서드 => build 이전에 나와야한다
+  // API 업데이트를 구독할 수 있게 도와줌
+  @override
+  void dispose() {
+    super.dispose();
+    print('dispose');
+  }
+  //스크린에서 위젯 스크린에서 제거될때 호출되는 메서드
+  // 이벤트 리스너 같은 것들을 구독 취소할 수 있게 도와줌
+  @override
+  Widget build(BuildContext context) {
+    print("build");
+    return Text(
+      'My Large Title',
+      style: TextStyle(
+        fontSize: 30,
+        color: Theme.of(context).textTheme.titleLarge?.color,
       ),
     );
   }
